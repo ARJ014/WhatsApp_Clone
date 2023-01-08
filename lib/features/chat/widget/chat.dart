@@ -4,6 +4,8 @@ import "package:flutter/material.dart";
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:whatsapp_clone/common/enum/message_enum.dart';
+import 'package:whatsapp_clone/common/provider/messageReply.dart';
 
 import 'package:whatsapp_clone/common/widgets/loader.dart';
 import 'package:whatsapp_clone/features/chat/controller/chat_controller.dart';
@@ -30,6 +32,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     messageController.dispose();
   }
 
+  void messageReplyHandler(String message, bool isMe, MessageEnum type) {
+    ref.read(MessageReplyProvider.state).update((state) =>
+        MessageReply(message: message, isMe: isMe, messageType: type));
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<MessageModel>>(
@@ -50,17 +57,38 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             itemCount: snapshot.data!.length,
             itemBuilder: ((context, index) {
               var message = snapshot.data![index];
+
+              if (!message.isSeen &&
+                  message.reciverId == FirebaseAuth.instance.currentUser!.uid) {
+                ref
+                    .read(ChatControllerProvider)
+                    .setSeen(context, widget.receiverId, message.messageId);
+              }
+
               if (message.senderId == FirebaseAuth.instance.currentUser!.uid) {
                 return MyMessageCard(
                   message: message.text,
                   date: DateFormat.Hm().format(message.timesent),
                   type: message.type,
+                  repliedMessageType: message.repliedMessageType,
+                  repliedText: message.repliedMessage,
+                  username: message.repliedTo,
+                  onLeftSwipe: () {
+                    messageReplyHandler(message.text, true, message.type);
+                  },
+                  isSeen: message.isSeen,
                 );
               } else {
                 return SenderMessageCard(
                   message: message.text,
                   date: DateFormat.Hm().format(message.timesent),
                   type: message.type,
+                  onRightSwipe: () {
+                    messageReplyHandler(message.text, false, message.type);
+                  },
+                  repliedMessageType: message.repliedMessageType,
+                  repliedText: message.repliedMessage,
+                  username: message.repliedTo,
                 );
               }
             }));

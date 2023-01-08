@@ -28,6 +28,7 @@ class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
     super.didChangeAppLifecycleState(state);
 
     switch (state) {
@@ -38,7 +39,7 @@ class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
       case AppLifecycleState.detached:
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
-        ref.read(AuthControllerProvider).setUserState(false);
+        ref.watch(AuthControllerProvider).setUserState(false);
         break;
     }
   }

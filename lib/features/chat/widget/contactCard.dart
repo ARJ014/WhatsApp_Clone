@@ -47,8 +47,8 @@ class ContactCard extends ConsumerWidget {
                             //   backgroundImage: NetworkImage(contact.profilePic),
                             // ),
                             leading: Container(
-                              width: 30.0,
-                              height: 30.0,
+                              width: 50.0,
+                              height: 50.0,
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                               ),

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsapp_clone/common/enum/message_enum.dart';
+import 'package:whatsapp_clone/common/provider/messageReply.dart';
 import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
 
 import 'package:whatsapp_clone/features/chat/repository/chat_repository.dart';
@@ -31,18 +32,36 @@ class ChatController {
   }
 
   void sendTextmessage(context, String text, String recieverUserId) {
+    final messageReply = ref.read(MessageReplyProvider);
     ref.read(AuthControllerProviderFuture).whenData((value) =>
         chatRepository.sendTextmessage(
             context: context,
             text: text,
             senderUser: value!,
+            messageReply: messageReply,
             recieverUserId: recieverUserId));
+    ref.read(MessageReplyProvider.state).update((state) => null);
   }
 
   void sendFilemessage(
       context, File file, String recieverUserId, MessageEnum messageEnum) {
-    ref.read(AuthControllerProviderFuture).whenData((value) =>
-        chatRepository.sendFileMessage(
-            context, ref, messageEnum, recieverUserId, value!, file));
+    final messageReply = ref.read(MessageReplyProvider);
+
+    ref
+        .read(AuthControllerProviderFuture)
+        .whenData((value) => chatRepository.sendFileMessage(
+              context,
+              ref,
+              messageEnum,
+              recieverUserId,
+              value!,
+              file,
+              messageReply,
+            ));
+    ref.read(MessageReplyProvider.state).update((state) => null);
+  }
+
+  void setSeen(context, String recieverUserId, String messageId) {
+    chatRepository.setSeen(context, recieverUserId, messageId);
   }
 }

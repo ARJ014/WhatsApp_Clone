@@ -71,6 +71,7 @@ class ChatScreenMobile extends ConsumerWidget {
           ),
           chatTextField(
             recieverUserId: uid,
+            reciever: username,
           )
         ],
       ),

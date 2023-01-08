@@ -16,11 +16,20 @@ class VideoPlayer extends StatefulWidget {
 class _VideoPlayerState extends State<VideoPlayer> {
   bool isPlay = false;
   late CachedVideoPlayerController videoController;
+
   @override
   void initState() {
     super.initState();
     videoController = CachedVideoPlayerController.network(widget.VideoUrl)
-      ..initialize().then((value) => videoController.setVolume(0.5));
+      ..initialize().then((value) {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    videoController.dispose();
   }
 
   @override
@@ -42,7 +51,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                     isPlay = !isPlay;
                   });
                 },
-                icon: isPlay
+                icon: !isPlay
                     ? const Icon(Icons.play_arrow)
                     : const Icon(
                         Icons.pause,
