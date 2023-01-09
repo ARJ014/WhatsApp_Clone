@@ -15,8 +15,11 @@ import 'package:whatsapp_clone/features/chat/widget/SenderMessages.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final String receiverId;
+  final bool isGroupChat;
+
   const ChatScreen({
     required this.receiverId,
+    required this.isGroupChat,
   });
 
   @override
@@ -40,8 +43,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<MessageModel>>(
-      stream:
-          ref.watch(ChatControllerProvider).getchatMessages(widget.receiverId),
+      stream: widget.isGroupChat
+          ? ref.read(ChatControllerProvider).getGroupMessages(widget.receiverId)
+          : ref.read(ChatControllerProvider).getchatMessages(widget.receiverId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           const LoadingScreen();

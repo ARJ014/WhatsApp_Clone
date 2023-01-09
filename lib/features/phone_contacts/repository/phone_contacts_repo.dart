@@ -22,10 +22,29 @@ class SelectContactRepostitory {
 
   Future<List<Contact>> getContacts() async {
     List<Contact> contacts = [];
+    List<Contact> realcontacts = [];
     try {
       if (await FlutterContacts.requestPermission()) {
         contacts = await FlutterContacts.getContacts(withProperties: true);
       }
+
+      for (int i = 0; i < contacts.length; i++) {
+        var userCollection = await firestore
+            .collection('users')
+            .where(
+              'phone',
+              isEqualTo: contacts[i].phones[0].number.replaceAll(
+                    ' ',
+                    '',
+                  ),
+            )
+            .get();
+
+        if (userCollection.docs.isNotEmpty && userCollection.docs[0].exists) {
+          realcontacts.add(contacts[i]);
+        }
+      }
+      print(realcontacts);
     } catch (e) {
       debugPrint(e.toString());
     }

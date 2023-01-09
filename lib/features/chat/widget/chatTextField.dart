@@ -18,10 +18,13 @@ import 'package:whatsapp_clone/resources/colors.dart';
 class chatTextField extends ConsumerStatefulWidget {
   final String reciever;
   final String recieverUserId;
+  final bool isGroupChat;
+
   const chatTextField({
     Key? key,
     required this.recieverUserId,
     required this.reciever,
+    required this.isGroupChat,
   }) : super(key: key);
 
   @override
@@ -57,9 +60,12 @@ class _chatTextFieldState extends ConsumerState<chatTextField> {
 
   void sendTextMessage() async {
     if (showIsSendbutton) {
-      ref
-          .read(ChatControllerProvider)
-          .sendTextmessage(context, textController.text, widget.recieverUserId);
+      ref.read(ChatControllerProvider).sendTextmessage(
+            context,
+            textController.text,
+            widget.recieverUserId,
+            widget.isGroupChat,
+          );
       setState(() {
         textController.text = "";
       });
@@ -90,9 +96,13 @@ class _chatTextFieldState extends ConsumerState<chatTextField> {
   }
 
   void sendFile(File file, MessageEnum messageEnum) {
-    ref
-        .read(ChatControllerProvider)
-        .sendFilemessage(context, file, widget.recieverUserId, messageEnum);
+    ref.read(ChatControllerProvider).sendFilemessage(
+          context,
+          file,
+          widget.recieverUserId,
+          messageEnum,
+          widget.isGroupChat,
+        );
   }
 
   void selectImage() async {

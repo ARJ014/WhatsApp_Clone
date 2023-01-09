@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsapp_clone/common/utils/utils.dart';
 import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
+import 'package:whatsapp_clone/features/groups/screens/create_group.dart';
 import 'package:whatsapp_clone/features/phone_contacts/screens/selectContactScreen.dart';
 import 'package:whatsapp_clone/features/status/screens/confirm_Statues_screen.dart';
 import 'package:whatsapp_clone/features/status/screens/status_contact_screen.dart';
@@ -21,16 +22,12 @@ class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   late TabController _tabController;
 
-  final icons = [Icons.message, Icons.camera, Icons.call];
   IconData floating = Icons.message;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _tabController = TabController(length: 3, vsync: this);
-    setState(() {
-      floating = icons[_tabController.index];
-    });
   }
 
   @override
@@ -70,8 +67,25 @@ class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
                 fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold),
           ),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                )),
+            PopupMenuButton(
+              icon: const Icon(
+                Icons.more_vert,
+                color: Colors.grey,
+              ),
+              itemBuilder: ((context) => [
+                    PopupMenuItem(
+                      child: const Text('Create Group'),
+                      onTap: () => Future(() =>
+                          Navigator.pushNamed(context, CreateGroupScreen.name)),
+                    )
+                  ]),
+            ),
           ],
           bottom: TabBar(
             controller: _tabController,
@@ -102,6 +116,7 @@ class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
             } else {
               File? file = await pickImageFromGallery(context);
               if (file != null) {
+                // ignore: use_build_context_synchronously
                 Navigator.pushNamed(
                   context,
                   ConfirmStatusScreen.name,

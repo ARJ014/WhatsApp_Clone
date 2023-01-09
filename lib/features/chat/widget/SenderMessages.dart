@@ -37,7 +37,7 @@ class SenderMessageCard extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width - 45, minWidth: 95),
+              maxWidth: MediaQuery.of(context).size.width - 45, minWidth: 80),
           child: Card(
             elevation: 1,
             shape: const RoundedRectangleBorder(
@@ -54,8 +54,8 @@ class SenderMessageCard extends StatelessWidget {
                     ? const EdgeInsets.only(
                         top: 5,
                         bottom: 20,
-                        left: 10,
-                        right: 100,
+                        left: 7,
+                        right: 1,
                       )
                     : const EdgeInsets.only(
                         top: 5,
@@ -67,7 +67,6 @@ class SenderMessageCard extends StatelessWidget {
                   children: [
                     if (isReplying) ...[
                       Container(
-                        constraints: const BoxConstraints(minWidth: 68),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
@@ -98,16 +97,15 @@ class SenderMessageCard extends StatelessWidget {
                 ),
               ),
               Positioned(
-                  bottom: (type == MessageEnum.text) ? 2 : 4,
+                  bottom: (type == MessageEnum.text) ? 4 : 4,
                   right: 5,
                   child: Row(
                     children: [
                       Text(
                         date,
-                        style:
-                            const TextStyle(fontSize: 13, color: Colors.grey),
+                        style: TextStyle(fontSize: 13, color: Colors.grey[400]),
                       ),
-                      const SizedBox(width: 3),
+                      const SizedBox(width: 5),
                     ],
                   ))
             ]),

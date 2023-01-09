@@ -38,7 +38,7 @@ class ContactScreen extends ConsumerWidget {
                       child: ListTile(
                         title: Text(
                           contact.displayName,
-                          style: const TextStyle(fontSize: 27),
+                          style: const TextStyle(fontSize: 24),
                         ),
                         leading: (contact.photo == null)
                             ? null

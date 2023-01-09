@@ -32,6 +32,7 @@ class WebScreenLayout extends StatelessWidget {
               const Expanded(
                   child: ChatScreen(
                 receiverId: '',
+                isGroupChat: false,
               )),
               Container(
                 height: MediaQuery.of(context).size.height * 0.07,
